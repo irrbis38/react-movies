@@ -1,12 +1,6 @@
 export const MoviesItem = (props) => {
   // console.log(props);
-  const {
-    Title: title,
-    Year: year,
-    Type: type,
-    imdbID: id,
-    Poster: poster,
-  } = props;
+  const { Title: title, Year: year, Poster: poster } = props;
 
   return (
     <div className="card">

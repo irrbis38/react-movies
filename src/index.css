@@ -21,3 +21,24 @@ main {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
 }
+
+.preloader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search__line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.search__input {
+  flex-grow: 1;
+}
+
+.search__btn {
+  flex-grow: 0;
+}
