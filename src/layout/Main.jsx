@@ -5,32 +5,40 @@ import { Search } from "../components/Search";
 import { Preloader } from "./../components/Preloader";
 
 export class Main extends React.Component {
-  state = {
-    movies: [],
-  };
+    state = {
+        movies: [],
+        loading: true,
+    };
 
-  componentDidMount() {
-    fetch('http://www.omdbapi.com/?apikey=56f4f48e&s="girl"')
-      .then((response) => response.json())
-      .then((movies) => this.setState({ movies: movies.Search }));
-  }
+    componentDidMount() {
+        fetch('http://www.omdbapi.com/?apikey=56f4f48e&s="man"')
+            .then((response) => response.json())
+            .then((movies) =>
+                this.setState({ movies: movies.Search, loading: false })
+            );
+    }
 
-  clickHandler = (str) => {
-    fetch(`http://www.omdbapi.com/?apikey=56f4f48e&s="${str}"`)
-      .then((response) => response.json())
-      .then((movies) => this.setState({ movies: movies.Search }));
-  };
+    clickHandler = (str, type = "all") => {
+        this.setState({ loading: true });
+        str = str || "man";
+        fetch(
+            `http://www.omdbapi.com/?apikey=56f4f48e&s="${str}${
+                type !== "all" ? `&type=${type}` : ""
+            }"`
+        )
+            .then((response) => response.json())
+            .then((movies) => {
+                this.setState({ movies: movies.Search, loading: false });
+            });
+    };
 
-  render() {
-    return (
-      <main className="container">
-        <Search clickHandler={this.clickHandler} />
-        {this.state.movies.length === 0 ? (
-          <Preloader />
-        ) : (
-          <Movies movies={this.state.movies} />
-        )}
-      </main>
-    );
-  }
+    render() {
+        const { movies, loading } = this.state;
+        return (
+            <main className="container">
+                <Search clickHandler={this.clickHandler} />
+                {loading ? <Preloader /> : <Movies movies={movies} />}
+            </main>
+        );
+    }
 }
