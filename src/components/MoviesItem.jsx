@@ -9,7 +9,7 @@ export const MoviesItem = (props) => {
       </div>
       <div className="card-content">
         <span className="card-title activator grey-text text-darken-4">
-          Title
+          {title}
         </span>
         <p>{year}</p>
       </div>

@@ -1,44 +1,44 @@
-import React from "react";
+import { useState, useEffect } from "react";
 
 import { Movies } from "../components/Movies";
 import { Search } from "../components/Search";
 import { Preloader } from "./../components/Preloader";
 
-export class Main extends React.Component {
-    state = {
-        movies: [],
-        loading: true,
-    };
+const getFetch = (moviesHandler, loadingHandler, str, type) => {
+  type = type || "all";
+  str = str || "man";
+  fetch(
+    `http://www.omdbapi.com/?apikey=56f4f48e&s="${str}${
+      type !== "all" ? `&type=${type}` : ""
+    }"`
+  )
+    .then((response) => response.json())
+    .then((movies) => {
+      moviesHandler(movies.Search);
+      loadingHandler(false);
+    })
+    .catch((err) => {
+      console.log(err);
+      loadingHandler(false);
+    });
+};
 
-    componentDidMount() {
-        fetch('http://www.omdbapi.com/?apikey=56f4f48e&s="man"')
-            .then((response) => response.json())
-            .then((movies) =>
-                this.setState({ movies: movies.Search, loading: false })
-            );
-    }
+export const Main = () => {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    clickHandler = (str, type = "all") => {
-        this.setState({ loading: true });
-        str = str || "man";
-        fetch(
-            `http://www.omdbapi.com/?apikey=56f4f48e&s="${str}${
-                type !== "all" ? `&type=${type}` : ""
-            }"`
-        )
-            .then((response) => response.json())
-            .then((movies) => {
-                this.setState({ movies: movies.Search, loading: false });
-            });
-    };
+  useEffect(() => {
+    getFetch(setMovies, setLoading);
+  }, []);
 
-    render() {
-        const { movies, loading } = this.state;
-        return (
-            <main className="container">
-                <Search clickHandler={this.clickHandler} />
-                {loading ? <Preloader /> : <Movies movies={movies} />}
-            </main>
-        );
-    }
-}
+  const clickHandler = (str, type) => {
+    getFetch(setMovies, setLoading, str, type);
+  };
+
+  return (
+    <main className="container">
+      <Search clickHandler={clickHandler} />
+      {loading ? <Preloader /> : <Movies movies={movies} />}
+    </main>
+  );
+};

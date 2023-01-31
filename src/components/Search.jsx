@@ -1,90 +1,75 @@
-import React from "react";
+import { useState } from "react";
 
-export class Search extends React.Component {
-    state = {
-        search: "",
-        type: "all",
-    };
+export const Search = ({ clickHandler }) => {
+  const [search, setSearch] = useState("");
+  const [type, setType] = useState("all");
 
-    inputHandler = (e) => {
-        if (e.key === "Enter") {
-            this.props.clickHandler(this.state.search, this.state.type);
-        }
-    };
-
-    filterHandler = (e) => {
-        // console.log(e.target.dataset.type);
-        this.setState(
-            () => ({ type: e.target.dataset.type }),
-            () => {
-                this.props.clickHandler(this.state.search, this.state.type);
-            }
-        );
-    };
-
-    render() {
-        const { clickHandler } = this.props;
-
-        return (
-            <div className="row">
-                <div className="col s12">
-                    <div className="input-field search__line">
-                        <input
-                            placeholder="search"
-                            value={this.state.search}
-                            onChange={(e) =>
-                                this.setState({ search: e.target.value })
-                            }
-                            type="search"
-                            className="validate search__input"
-                            onKeyDown={(e) => this.inputHandler(e)}
-                        />
-                        <button
-                            className="btn search__btn"
-                            onClick={() =>
-                                clickHandler(this.state.search, this.state.type)
-                            }
-                        >
-                            Search
-                        </button>
-                    </div>
-                </div>
-                <div className="filters">
-                    <label className="filters__btn">
-                        <input
-                            className="with-gap"
-                            name="group3"
-                            type="radio"
-                            data-type="all"
-                            onChange={this.filterHandler}
-                            checked={this.state.type === "all"}
-                        />
-                        <span>All</span>
-                    </label>
-                    <label className="filters__btn">
-                        <input
-                            className="with-gap"
-                            name="group3"
-                            type="radio"
-                            data-type="movie"
-                            onChange={this.filterHandler}
-                            checked={this.state.type === "movie"}
-                        />
-                        <span>Movie</span>
-                    </label>
-                    <label className="filters__btn">
-                        <input
-                            className="with-gap"
-                            name="group3"
-                            type="radio"
-                            data-type="series"
-                            onChange={this.filterHandler}
-                            checked={this.state.type === "series"}
-                        />
-                        <span>Series</span>
-                    </label>
-                </div>
-            </div>
-        );
+  const inputHandler = (e) => {
+    if (e.key === "Enter") {
+      clickHandler(search, type);
     }
-}
+  };
+
+  const filterHandler = (e) => {
+    setType(e.target.dataset.type);
+    clickHandler(search, e.target.dataset.type);
+  };
+
+  return (
+    <div className="row">
+      <div className="col s12">
+        <div className="input-field search__line">
+          <input
+            placeholder="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            type="search"
+            className="validate search__input"
+            onKeyDown={(e) => inputHandler(e)}
+          />
+          <button
+            className="btn search__btn"
+            onClick={() => clickHandler(search, type)}
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      <div className="filters">
+        <label className="filters__btn">
+          <input
+            className="with-gap"
+            name="group3"
+            type="radio"
+            data-type="all"
+            onChange={filterHandler}
+            checked={type === "all"}
+          />
+          <span>All</span>
+        </label>
+        <label className="filters__btn">
+          <input
+            className="with-gap"
+            name="group3"
+            type="radio"
+            data-type="movie"
+            onChange={filterHandler}
+            checked={type === "movie"}
+          />
+          <span>Movie</span>
+        </label>
+        <label className="filters__btn">
+          <input
+            className="with-gap"
+            name="group3"
+            type="radio"
+            data-type="series"
+            onChange={filterHandler}
+            checked={type === "series"}
+          />
+          <span>Series</span>
+        </label>
+      </div>
+    </div>
+  );
+};
